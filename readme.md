@@ -18,7 +18,7 @@
 ```
 ## Description
 
-IPscalper is a tool for gathering open-source information about IP addresses. It integrates various APIs to retrieve data such as geographical location, reputation, IoCs and open ports.
+IPscalper is an open-source tool designed for comprehensive IP address analysis. By integrating multiple APIs, it provides extensive data, including geographical location, reputation, associated threats (IoCs), and open ports.
 
 You can use this Script to get parsed or raw results from these tools:
 * VirusTotal  
@@ -50,6 +50,7 @@ Tools that require API keys
 ## Installation
 
 ```
+git clone https://github.com/pbwbb/IPscalper
 pip install requests argparse urllib3
 ````
 Edit the "API_keys.txt" and input the API keys if you wish to use the tools that require them, insert as "Tool:key" do not use "" on the keys
@@ -205,7 +206,7 @@ This IP is part of our RIOT project, which identifies IPs from known benign serv
 
 ## Disclaimer
 
-I am not responsible for any misuse of APIs or tools used in this script. Use responsibly and respect API usage limits.
+This tool is for educational and research purposes only. I am not responsible for any misuse of APIs or tools used in this script. Use responsibly and respect API usage limits.
 
 
 ---
