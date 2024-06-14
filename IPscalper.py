@@ -3,11 +3,13 @@ import requests
 import argparse
 import json
 import urllib3
+import time
 
 
 #pip install requests
 #pip install argparse
 #pip install json
+#pip install urllib3
 
 with open('API_keys.txt', 'r') as f:
     lines = f.readlines()
@@ -55,7 +57,7 @@ def ip_api(IP,args):
         response = requests.get(f"http://ip-api.com/json/{IP}")
         data = response.json()
         if args.raw == True:
-             print(response.text)
+            print(response.text)
         elif data['status'] == "success":
             print("\nIP location:\n")
             print(f"country: {data['country']}({data['countryCode']})")
@@ -88,20 +90,22 @@ def vt(IP,args,VirusTotal_key):
                 print("\nVirusTotal analisys:\n")
                 print(f"IP: {data['data']['id']} ")
                 print(f"AS Owner: {data['data']['attributes']['as_owner']}")
-                print(f"votes: \n\tharmless: {data['data']['attributes']['total_votes']['harmless']}\n\tmalicious: {data['data']['attributes']['total_votes']['malicious']}")
+                print(f"votes: \n\tharmless: {data['data']['attributes']['total_votes']['harmless']}\n\tmalicious: {data['data']['attributes']['total_votes']['malicious']}\n")
                 for vendor in analisys.keys():
                     if analisys[vendor]['result'] not in ["clean","unrated"]:
                         print(f"Vendor: {analisys[vendor]['engine_name']}")
                         print(f"Category: {analisys[vendor]['category']}")
                         print(f"Result: {analisys[vendor]['result']}")
-                linha_separacao()
             elif detected == False:
                 print("VirusTotal analisys:\n")
                 print(f"IP: {data['data']['id']} ")
                 print(f"AS Owner: {data['data']['attributes']['as_owner']}")
-                print(f"votes: \n\tharmless: {data['data']['attributes']['total_votes']['harmless']}\n\tmalicious: {data['data']['attributes']['total_votes']['malicious']}")
+                print(f"votes: \n\tharmless: {data['data']['attributes']['total_votes']['harmless']}\n\tmalicious: {data['data']['attributes']['total_votes']['malicious']}\n")
                 print("No threats detected")
-                linha_separacao()
+            linha_separacao()
+            print("\nWHOIS from VirustTotal: \n")
+            print(f"{data['data']['attributes']['whois']}")
+            linha_separacao()
         elif response.status_code == 401:
                 print("\nVirusTotal:\n")
                 print(f"Ivalid API key\nMessage: {data['error']['message']}")
@@ -240,9 +244,9 @@ def C2(IP,args):
                     linha_separacao()
         else: print(f"\nFEODO C2 tracker by abuse.ch:\nHTTP{response.status_code}\n{response.text}")
     except requests.exceptions.RequestException as e:
-      print(f"\nFEODO C2 tracker by abuse.ch:\n")
-      print("Oops...", e)
-      linha_separacao()
+        print(f"\nFEODO C2 tracker by abuse.ch:\n")
+        print("Oops...", e)
+        linha_separacao()
 
 def threatfox(IP,args):
     try:
@@ -256,7 +260,7 @@ def threatfox(IP,args):
         response = pool.request("POST", "/api/v1/", body=json_query)
         data = response.json()
         if args.raw == True: 
-            print(response)
+            print(data)
         elif data['query_status'] == 'no_result':
             print("\nThreatFox by abuse.ch:\n")
             print(data['data'])
@@ -287,7 +291,7 @@ def greynoise(IP,args,Greynoise_key):
             print(response.text)
         elif response.status_code == 200:
             print("\nGreyNoise:\n")
-            print(f"GreyNoise: {data['ip']}")
+            print(f"IP: {data['ip']}")
             print(f"Name: {data['name']}") 
             if data['riot'] == True: print("This IP is part of our RIOT project, which identifies IPs from known benign services and organizations that commonly cause false positives in network security and threat intelligence products.")
             elif data['noise'] == True: print(f"Ths IP has been seen scanning the internet\nLast seen: {data['last_seen']}")    
@@ -299,10 +303,42 @@ def greynoise(IP,args,Greynoise_key):
         elif response.status_code == 404:
             print("\nGreyNoise:\n")
             print(f"IP: {data['ip']}")
-            print(data['message'])        
-        else: print(f"\nOTX AlienVault:\nHTTP {response.status_code}\n{response.text}")          
+            print(data['message'])    
+            linha_separacao()    
+        else: print(f"\nOTX AlienVault:\nHTTP {response.status_code}\n{response.text}")       
     except requests.exceptions.RequestException as e:
         print(f"\nGreyNoise:\n")
+        print("Oops...", e)
+        linha_separacao()
+
+def ping(IP,args):
+    try:
+        url_request = (f'https://check-host.net/check-ping?host={IP}&max_nodes=3')
+        headers = {'Accept' : 'application/json'}
+        response_request = requests.request(method='GET', url=url_request, headers=headers)
+        data_request = response_request.json()
+        request_id = data_request['request_id']
+        url = (f"https://check-host.net/check-result/{request_id}")
+        time.sleep(2)
+        response = requests.request(method='GET', url=url, headers=headers)
+        data = response.json()
+        if args.raw == True: 
+            print(data_request)
+            print(data)
+        elif response.status_code == 200:
+            print(f"\nPing with Check-Host:\n")
+            for node,result in data.items():
+                print("Node:",node)
+                for result_set in result:
+                    if result_set[0] == None:
+                            print("\tUnknown host")
+                    else:
+                        for status in result_set:
+                            print(f"\tStatus: {status[0]}, Latency: {status[1]:.3f}") 
+            linha_separacao()       
+        else: print(f"\n:Ping with Check-host\nHTTP {response.status_code}\n{response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"\nPing with Check-host:\n")
         print("Oops...", e)
         linha_separacao()
 
@@ -314,6 +350,7 @@ def main():
     # parser.add_argument("-v","--verbose", required=False,  action="store_true", help="Verbose output")
     parser.add_argument("-geo","--location", required=False,  action="store_true", help="Uses IP-api to get IP location (no key needed)") #IP-API no key
     parser.add_argument("-raw", required=False, action="store_true", help="Displays raw json output")
+    parser.add_argument("-ping", required=False, action="store_true", help="Uses check-host.net to ping the IP form multiple hosts (no key needed)")
     parser.add_argument("-vt","--VirusTotal", required=False,  action="store_true", help="Uses VirusTotal API for info (key required -> edit API_keys.txt file or uncomment lines)")
     parser.add_argument("-abuse","--AbuseIPdb", required=False,  action="store_true", help="Uses AbuseIPdb API for info (key required -> edit API_keys.txt file or uncomment lines)")  
     parser.add_argument("-otx","--AlienVault", required=False,  action="store_true", help="Uses OTX AlienVault API for info (key required -> edit API_keys.txt file or uncomment lines)") # alienvault
@@ -323,10 +360,15 @@ def main():
     parser.add_argument("-threatfox", required=False,  action="store_true", help="Uses abuse.ch ThreatFox API for info (no key needed)")
     parser.add_argument("-gn","--greynoise", required=False,  action="store_true", help="Uses GreyNoise API for info (key required -> edit API_keys.txt file or uncomment lines)")
     parser.add_argument("-nokey", required=False,  action="store_true", help="Only uses tools that do not require an API key")
+    parser.add_argument("-nobanner", required=False,  action="store_true", help="Do not display banner")
     args=parser.parse_args()
+    
     IP = args.IP
-    if args.all == True:
+
+    if args.nobanner == False:
         logo()
+    if args.all == True:
+        ping(IP,args)
         ip_api(IP,args)
         abuseIP(IP,args,AbuseIPdb_key)
         crimninalip(IP,args,CriminalIP_key)
@@ -336,13 +378,14 @@ def main():
         threatfox(IP,args)
         greynoise(IP,args,GreyNoise_key)      
     else:
-        logo()
         if args.showkeys == True:
             print("API keys:\n")
             print("VirusTotal: ", VirusTotal_key)
             print("AbuseIPdb: ", AbuseIPdb_key)
             print("OTX AlienVault: ", otx_key)
             print("CriminalIP: ", CriminalIP_key)
+        if args.ping == True:
+            ping(IP,args)
         if args.nokey == True:
             ip_api(IP,args)
             C2(IP,args)
@@ -367,9 +410,6 @@ def main():
             ip_api(IP,args)
             C2(IP,args)
             threatfox(IP,args)
-   
+
 if __name__ == "__main__":
     main()
-
-
-
