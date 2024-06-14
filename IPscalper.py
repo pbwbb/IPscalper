@@ -387,6 +387,7 @@ def main():
         if args.ping == True:
             ping(IP,args)
         if args.nokey == True:
+            ping(IP,args)
             ip_api(IP,args)
             C2(IP,args)
             threatfox(IP,args)
