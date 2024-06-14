@@ -21,7 +21,8 @@
 IPscalper is an open-source tool designed for comprehensive IP address analysis. By integrating multiple APIs, it provides extensive data, including geographical location, reputation, associated threats (IoCs), and open ports.
 
 You can use this Script to get parsed or raw results from these tools:
-* VirusTotal  
+* Ping with Check-Host.net
+* VirusTotal (including WHOIS)
 * AbuseIPdb 
 * OTX ALienVault 
 * CriminalIP 
@@ -71,13 +72,10 @@ python IPscalper.py [options] <IP address>
 ## help menu
 
 ```
-usage: IPscalper [-h] [-all] [-geo] [-raw] [-vt] [-abuse] [-otx] [-showkeys] [-criminalip] [-c2] [-threatfox] [-gn] [-nokey] IP
+usage: IPscalper [-h] [-all] [-geo] [-raw] [-ping] [-vt] [-abuse] [-otx] [-showkeys] [-criminalip] [-c2] [-threatfox] [-gn] [-nokey] [-nobanner] IP
 
-A tool for finding open source information about IP addresses 
-All tools used on this script are free, although API keys are necessary for some of them. To get the keys you only need to create an       
-account. 
-Be mindiful of API limits. 
-I am not responsible for any misuse of APIs or tools on this script
+A tool for finding open source information about IP addresses All tools used on this script are free, although API keys are necessary for some of them. To get  
+the keys you only need to create an account. Be mindiful of API limits. I am not responsible for any misuse of APIs or tools on this script
 
 positional arguments:
   IP                   IP address that is going to be searched
@@ -87,6 +85,7 @@ options:
   -all                 Uses all tools
   -geo, --location     Uses IP-api to get IP location (no key needed)
   -raw                 Displays raw json output
+  -ping                Uses check-host.net to ping the IP form multiple hosts (no key needed)
   -vt, --VirusTotal    Uses VirusTotal API for info (key required -> edit API_keys.txt file or uncomment lines)
   -abuse, --AbuseIPdb  Uses AbuseIPdb API for info (key required -> edit API_keys.txt file or uncomment lines)
   -otx, --AlienVault   Uses OTX AlienVault API for info (key required -> edit API_keys.txt file or uncomment lines)
@@ -96,25 +95,45 @@ options:
   -threatfox           Uses abuse.ch ThreatFox API for info (no key needed)
   -gn, --greynoise     Uses GreyNoise API for info (key required -> edit API_keys.txt file or uncomment lines)
   -nokey               Only uses tools that do not require an API key
+  -nobanner            Do not display banner
 
-https://github.com/pbwbb/Projects/tree/main/IPscalper by Pedro Webber
+https://github.com/pbwbb/IPscalper by Pedro Webber
 ```
 ## Example output
 
 ```
-python IPscalper.py -all 8.8.8.8
 
-    ooOoOOo OooOOo.                      o                    
-       O    O     `O                    O                     
-       o    o      O                    o                     
-       O    O     .o                    O                     
-       o    oOooOO'  .oOo  .oOo  .oOoO' o  .oOo. .oOo. `OoOo. 
-       O    o        `Ooo. O     O   o  O  O   o OooO'  o     
-       O    O            O o     o   O  o  o   O O      O     
-    ooOOoOo o'       `OoO' `OoO' `OoO'o Oo oOoO' `OoO'  o     
-                                           O                  
-                                           o'  by Pedro Webber                
-    
+    ooOoOOo OooOOo.                      o
+       O    O     `O                    O
+       o    o      O                    o
+       O    O     .o                    O
+       o    oOooOO'  .oOo  .oOo  .oOoO' o  .oOo. .oOo. `OoOo.
+       O    o        `Ooo. O     O   o  O  O   o OooO'  o
+       O    O            O o     o   O  o  o   O O      O
+    ooOOoOo o'       `OoO' `OoO' `OoO'o Oo oOoO' `OoO'  o
+                                           O
+                                           o'  by Pedro Webber
+
+
+-+-+-+-+-+-+-+-+-+-+
+
+Ping with Check-Host:
+
+Node: rs1.node.check-host.net
+        Status: OK, Latency: 0.006
+        Status: OK, Latency: 0.006
+        Status: OK, Latency: 0.006
+        Status: OK, Latency: 0.006
+Node: ru4.node.check-host.net
+        Status: OK, Latency: 0.046
+        Status: OK, Latency: 0.047
+        Status: OK, Latency: 0.047
+        Status: OK, Latency: 0.047
+Node: tr1.node.check-host.net
+        Status: OK, Latency: 0.054
+        Status: OK, Latency: 0.053
+        Status: OK, Latency: 0.053
+        Status: OK, Latency: 0.052
 
 -+-+-+-+-+-+-+-+-+-+
 
@@ -148,29 +167,72 @@ Malicious: False
 VPN: False
 Remote Access: False
 Open Ports: 3
-	Port: 443 tcp
-	Protocol: https
+        Port: 443 tcp
+        Protocol: https
 
-	Port: 53 udp
-	Protocol: dns
+        Port: 53 udp
+        Protocol: dns
 
-	Port: 53 tcp
-	Protocol: dns
+        Port: 53 tcp
+        Protocol: dns
 
 Vulnerabilities: 0 []
 
 -+-+-+-+-+-+-+-+-+-+
-
 VirusTotal analisys:
 
-IP: 8.8.8.8 
+IP: 8.8.8.8
 AS Owner: GOOGLE
-votes: 
-	harmless: 186
-	malicious: 29
-Vendor: ArcSight Threat Intelligence
-Category: malicious
-Result: malware
+votes:
+        harmless: 189
+        malicious: 29
+
+No threats detected
+
+-+-+-+-+-+-+-+-+-+-+
+
+WHOIS from VirustTotal:
+
+NetRange: 8.8.8.0 - 8.8.8.255
+CIDR: 8.8.8.0/24
+NetName: GOGL
+NetHandle: NET-8-8-8-0-2
+Parent: NET8 (NET-8-0-0-0-0)
+NetType: Direct Allocation
+OriginAS:
+Organization: Google LLC (GOGL)
+RegDate: 2023-12-28
+Updated: 2023-12-28
+Ref: https://rdap.arin.net/registry/ip/8.8.8.0
+OrgName: Google LLC
+OrgId: GOGL
+Address: 1600 Amphitheatre Parkway
+City: Mountain View
+StateProv: CA
+PostalCode: 94043
+Country: US
+RegDate: 2000-03-30
+Updated: 2019-10-31
+Comment: Please note that the recommended way to file abuse complaints are located in the following links.
+Comment:
+Comment: To report abuse and illegal activity: https://www.google.com/contact/
+Comment:
+Comment: For legal requests: http://support.google.com/legal
+Comment:
+Comment: Regards,
+Comment: The Google Team
+Ref: https://rdap.arin.net/registry/entity/GOGL
+OrgTechHandle: ZG39-ARIN
+OrgTechName: Google LLC
+OrgTechPhone: +1-650-253-0000
+OrgTechEmail: arin-contact@google.com
+OrgTechRef: https://rdap.arin.net/registry/entity/ZG39-ARIN
+OrgAbuseHandle: ABUSE5250-ARIN
+OrgAbuseName: Abuse
+OrgAbusePhone: +1-650-253-0000
+OrgAbuseEmail: network-abuse@google.com
+OrgAbuseRef: https://rdap.arin.net/registry/entity/ABUSE5250-ARIN
+
 
 -+-+-+-+-+-+-+-+-+-+
 
@@ -196,7 +258,7 @@ Your search did not yield any results
 
 GreyNoise:
 
-GreyNoise: 8.8.8.8
+IP: 8.8.8.8
 Name: Google Public DNS
 This IP is part of our RIOT project, which identifies IPs from known benign services and organizations that commonly cause false positives in network security and threat intelligence products.
 
