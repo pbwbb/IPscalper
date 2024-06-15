@@ -103,9 +103,10 @@ def vt(IP,args,VirusTotal_key):
                 print(f"votes: \n\tharmless: {data['data']['attributes']['total_votes']['harmless']}\n\tmalicious: {data['data']['attributes']['total_votes']['malicious']}\n")
                 print("No threats detected")
             linha_separacao()
-            print("\nWHOIS from VirustTotal: \n")
-            print(f"{data['data']['attributes']['whois']}")
-            linha_separacao()
+            if data['data']['attributes']['whois'] != " \n":
+                print("\nWHOIS from VirustTotal: \n")
+                print(f"{data['data']['attributes']['whois']}")
+                linha_separacao()
         elif response.status_code == 401:
                 print("\nVirusTotal:\n")
                 print(f"Ivalid API key\nMessage: {data['error']['message']}")
@@ -329,12 +330,15 @@ def ping(IP,args):
             print(f"\nPing with Check-Host:\n")
             for node,result in data.items():
                 print("Node:",node)
-                for result_set in result:
-                    if result_set[0] == None:
-                            print("\tUnknown host")
-                    else:
-                        for status in result_set:
-                            print(f"\tStatus: {status[0]}, Latency: {status[1]:.3f}") 
+                if result == None:
+                    print("Inconclusive")
+                else:
+                    for result_set in result:
+                        if result_set[0] == None:
+                                print("\tUnknown host")
+                        else:
+                            for status in result_set:
+                                print(f"\tStatus: {status[0]}, Latency: {status[1]:.3f}") 
             linha_separacao()       
         else: print(f"\n:Ping with Check-host\nHTTP {response.status_code}\n{response.text}")
     except requests.exceptions.RequestException as e:
