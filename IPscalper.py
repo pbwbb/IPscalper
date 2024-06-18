@@ -259,7 +259,7 @@ def threatfox(IP,args):
         }
         json_query = json.dumps(query)
         response = pool.request("POST", "/api/v1/", body=json_query)
-        data = response.json()
+        data = json.loads(response.data.decode('utf-8'))
         if args.raw == True: 
             print(data)
         elif data['query_status'] == 'no_result':
@@ -320,7 +320,7 @@ def ping(IP,args):
         data_request = response_request.json()
         request_id = data_request['request_id']
         url = (f"https://check-host.net/check-result/{request_id}")
-        time.sleep(2)
+        time.sleep(7)
         response = requests.request(method='GET', url=url, headers=headers)
         data = response.json()
         if args.raw == True: 
@@ -331,7 +331,7 @@ def ping(IP,args):
             for node,result in data.items():
                 print("Node:",node)
                 if result == None:
-                    print("Inconclusive")
+                    print("Inconclusive or still pinging")
                 else:
                     for result_set in result:
                         if result_set[0] == None:
