@@ -10,7 +10,7 @@
        O    O            O o     o   O  o  o   O O      O     
     ooOOoOo o'       `OoO' `OoO' `OoO'o Oo oOoO' `OoO'  o     
                                            O                  
-                                           o'  by Pedro Webber                
+                                           o'  pbwbb                
     
 ```
 ## Description
@@ -75,7 +75,7 @@ A tool for finding open source information about IP addresses All tools used on 
 the keys you only need to create an account. Be mindiful of API limits. I am not responsible for any misuse of APIs or tools on this script
 
 positional arguments:
-  IP                   IP address that is going to be searched
+  IP                   IP address that is going to be searched****
 
 options:
   -h, --help           show this help message and exit
@@ -94,7 +94,8 @@ options:
   -nokey               Only uses tools that do not require an API key
   -nobanner            Do not display banner
 
-https://github.com/pbwbb/IPscalper by Pedro Webber
+https://github.com/pbwbb/IPscalper pb![image](https://github.com/user-attachments/assets/809cf302-9f39-42ff-a6ab-0cdf218e4557)
+wbb
 ```
 ## Example output
 
@@ -109,7 +110,7 @@ https://github.com/pbwbb/IPscalper by Pedro Webber
        O    O            O o     o   O  o  o   O O      O
     ooOOoOo o'       `OoO' `OoO' `OoO'o Oo oOoO' `OoO'  o
                                            O
-                                           o'  by Pedro Webber
+                                           o'  pbwbb
 
 
 -+-+-+-+-+-+-+-+-+-+
@@ -270,4 +271,4 @@ This tool is for educational and research purposes only. I am not responsible fo
 
 ---
 
-[GitHub Repository](https://github.com/pedrowebber/IPscalper) by Pedro Webber
+[GitHub Repository](https://github.com/pbwbb/IPscalper) by pbwbb
