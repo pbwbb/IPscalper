@@ -43,7 +43,7 @@ def logo():
        O    O            O o     o   O  o  o   O O      O     
     ooOOoOo o'       `OoO' `OoO' `OoO'o Oo oOoO' `OoO'  o     
                                            O                  
-                                           o'  by Pedro Webber                
+                                           o'  pbwbb                
     '''
     print(ascii)
     linha_separacao()
@@ -348,7 +348,7 @@ def ping(IP,args):
 
 def main(): 
     description = (f"A tool for finding open source information about IP addresses\n All tools used on this script are free, although API keys are necessary for some of them. To get the keys you only need to create an account.\nBe mindiful of API limits.\nI am not responsible for any misuse of APIs or tools on this script")
-    parser=argparse.ArgumentParser(prog="IPscalper",description=description,epilog="https://github.com/pbwbb/IPscalper by Pedro Webber")
+    parser=argparse.ArgumentParser(prog="IPscalper",description=description,epilog="https://github.com/pbwbb/IPscalper by pbwbb")
     parser.add_argument("IP", help="IP address that is going to be searched")
     parser.add_argument("-all", required=False,  action="store_true", help="Uses all tools")
     # parser.add_argument("-v","--verbose", required=False,  action="store_true", help="Verbose output")
